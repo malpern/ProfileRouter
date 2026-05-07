@@ -1,0 +1,17 @@
+# Work profile routes
+# One domain per line. Lines starting with # are comments.
+# Use path: prefix for path-based matching.
+
+# Communication
+slack.com
+zoom.us
+
+# Project management
+linear.app
+notion.so
+
+# Design
+figma.com
+
+# GitHub — work org
+path:github.com/your-org

@@ -1,0 +1,18 @@
+# Personal profile routes
+# One domain per line. Lines starting with # are comments.
+# Use path: prefix for path-based matching.
+
+# Social
+youtube.com
+reddit.com
+x.com
+instagram.com
+
+# News
+techmeme.com
+
+# Shopping
+amazon.com
+
+# GitHub — personal repos
+path:github.com/yourusername

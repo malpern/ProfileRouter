@@ -1,0 +1,480 @@
+[
+  {
+    "Constant" : [
+
+    ],
+    "submodules" : [
+
+    ],
+    "Function" : [
+
+    ],
+    "Variable" : [
+      {
+        "doc" : "Browser config table with keys: name (string), bundleID (string), processName (string).\nAuto-detected from running applications if nil. Checks Dia first, then Google Chrome.",
+        "stripped_doc" : [
+          "Browser config table with keys: name (string), bundleID (string), processName (string).",
+          "Auto-detected from running applications if nil. Checks Dia first, then Google Chrome."
+        ],
+        "desc" : "Browser config table with keys: name (string), bundleID (string), processName (string).",
+        "def" : "ProfileRouter.browser",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.browser",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "browser",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "List of profile tables, each with keys: name (string), titlePattern (string or nil),\nrouteFile (string), icon (string), isDefault (boolean).\nAuto-discovered from route files in `routesDir` if nil. Profile names are derived from\nfilenames (e.g., `work.txt` becomes \"Work\"). The default profile is detected automatically\nby scanning browser window titles at start time.",
+        "stripped_doc" : [
+          "List of profile tables, each with keys: name (string), titlePattern (string or nil),",
+          "routeFile (string), icon (string), isDefault (boolean).",
+          "Auto-discovered from route files in `routesDir` if nil. Profile names are derived from",
+          "filenames (e.g., `work.txt` becomes \"Work\"). The default profile is detected automatically",
+          "by scanning browser window titles at start time."
+        ],
+        "desc" : "List of profile tables, each with keys: name (string), titlePattern (string or nil),",
+        "def" : "ProfileRouter.profiles",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.profiles",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "profiles",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Directory containing route text files. Each `.txt` file defines a profile.\nDefault: `~\/.hammerspoon\/routes\/`",
+        "stripped_doc" : [
+          "Directory containing route text files. Each `.txt` file defines a profile.",
+          "Default: `~\/.hammerspoon\/routes\/`"
+        ],
+        "desc" : "Directory containing route text files. Each `.txt` file defines a profile.",
+        "def" : "ProfileRouter.routesDir",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.routesDir",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "routesDir",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes).",
+        "stripped_doc" : [
+          "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes)."
+        ],
+        "desc" : "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes).",
+        "def" : "ProfileRouter.cooldownSeconds",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.cooldownSeconds",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "cooldownSeconds",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true.",
+        "stripped_doc" : [
+          "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true."
+        ],
+        "desc" : "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true.",
+        "def" : "ProfileRouter.debug",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.debug",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "debug",
+        "parameters" : [
+
+        ]
+      }
+    ],
+    "stripped_doc" : [
+
+    ],
+    "desc" : "Route browser tabs between profiles automatically.",
+    "Deprecated" : [
+
+    ],
+    "type" : "Module",
+    "Constructor" : [
+
+    ],
+    "items" : [
+      {
+        "doc" : "Browser config table with keys: name (string), bundleID (string), processName (string).\nAuto-detected from running applications if nil. Checks Dia first, then Google Chrome.",
+        "stripped_doc" : [
+          "Browser config table with keys: name (string), bundleID (string), processName (string).",
+          "Auto-detected from running applications if nil. Checks Dia first, then Google Chrome."
+        ],
+        "desc" : "Browser config table with keys: name (string), bundleID (string), processName (string).",
+        "def" : "ProfileRouter.browser",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.browser",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "browser",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes).",
+        "stripped_doc" : [
+          "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes)."
+        ],
+        "desc" : "Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes).",
+        "def" : "ProfileRouter.cooldownSeconds",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.cooldownSeconds",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "cooldownSeconds",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true.",
+        "stripped_doc" : [
+          "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true."
+        ],
+        "desc" : "When true, log activity to `~\/.hammerspoon\/profile-router.log`. Default: true.",
+        "def" : "ProfileRouter.debug",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.debug",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "debug",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "List of profile tables, each with keys: name (string), titlePattern (string or nil),\nrouteFile (string), icon (string), isDefault (boolean).\nAuto-discovered from route files in `routesDir` if nil. Profile names are derived from\nfilenames (e.g., `work.txt` becomes \"Work\"). The default profile is detected automatically\nby scanning browser window titles at start time.",
+        "stripped_doc" : [
+          "List of profile tables, each with keys: name (string), titlePattern (string or nil),",
+          "routeFile (string), icon (string), isDefault (boolean).",
+          "Auto-discovered from route files in `routesDir` if nil. Profile names are derived from",
+          "filenames (e.g., `work.txt` becomes \"Work\"). The default profile is detected automatically",
+          "by scanning browser window titles at start time."
+        ],
+        "desc" : "List of profile tables, each with keys: name (string), titlePattern (string or nil),",
+        "def" : "ProfileRouter.profiles",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.profiles",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "profiles",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Directory containing route text files. Each `.txt` file defines a profile.\nDefault: `~\/.hammerspoon\/routes\/`",
+        "stripped_doc" : [
+          "Directory containing route text files. Each `.txt` file defines a profile.",
+          "Default: `~\/.hammerspoon\/routes\/`"
+        ],
+        "desc" : "Directory containing route text files. Each `.txt` file defines a profile.",
+        "def" : "ProfileRouter.routesDir",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter.routesDir",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "routesDir",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Bind hotkeys for ProfileRouter actions.\n\nParameters:\n * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.\n   Example: `{cycleTab = {{\"ctrl\"}, \"s\"}}`\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Bind hotkeys for ProfileRouter actions.",
+          ""
+        ],
+        "desc" : "Bind hotkeys for ProfileRouter actions.",
+        "def" : "ProfileRouter:bindHotkeys(mapping)",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:bindHotkeys(mapping)",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "bindHotkeys",
+        "parameters" : [
+          " * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.",
+          "   Example: `{cycleTab = {{\"ctrl\"}, \"s\"}}`",
+          ""
+        ]
+      },
+      {
+        "doc" : "Move the current tab to the next profile. With 2 profiles this toggles;\nwith 3+ it advances to the next and wraps around. Marks the URL on cooldown\nso the auto-router won't move it back. Shows a notification with an Undo button.\n\nParameters:\n * None\n\nReturns:\n * None",
+        "stripped_doc" : [
+          "Move the current tab to the next profile. With 2 profiles this toggles;",
+          "with 3+ it advances to the next and wraps around. Marks the URL on cooldown",
+          "so the auto-router won't move it back. Shows a notification with an Undo button.",
+          ""
+        ],
+        "desc" : "Move the current tab to the next profile. With 2 profiles this toggles;",
+        "def" : "ProfileRouter:cycleTab()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:cycleTab()",
+        "type" : "Method",
+        "returns" : [
+          " * None"
+        ],
+        "name" : "cycleTab",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Initialize the Spoon. Called automatically by `hs.loadSpoon`.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Initialize the Spoon. Called automatically by `hs.loadSpoon`.",
+          ""
+        ],
+        "desc" : "Initialize the Spoon. Called automatically by `hs.loadSpoon`.",
+        "def" : "ProfileRouter:init()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:init()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "init",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Start watching for tabs and routing them. Detects the browser, discovers profiles\nfrom route files, starts the window title watcher, route file watcher, cooldown timer,\nand external URL handler.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Start watching for tabs and routing them. Detects the browser, discovers profiles",
+          "from route files, starts the window title watcher, route file watcher, cooldown timer,",
+          "and external URL handler.",
+          ""
+        ],
+        "desc" : "Start watching for tabs and routing them. Detects the browser, discovers profiles",
+        "def" : "ProfileRouter:start()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:start()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "start",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.",
+          ""
+        ],
+        "desc" : "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.",
+        "def" : "ProfileRouter:stop()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:stop()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "stop",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      }
+    ],
+    "Method" : [
+      {
+        "doc" : "Initialize the Spoon. Called automatically by `hs.loadSpoon`.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Initialize the Spoon. Called automatically by `hs.loadSpoon`.",
+          ""
+        ],
+        "desc" : "Initialize the Spoon. Called automatically by `hs.loadSpoon`.",
+        "def" : "ProfileRouter:init()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:init()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "init",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Start watching for tabs and routing them. Detects the browser, discovers profiles\nfrom route files, starts the window title watcher, route file watcher, cooldown timer,\nand external URL handler.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Start watching for tabs and routing them. Detects the browser, discovers profiles",
+          "from route files, starts the window title watcher, route file watcher, cooldown timer,",
+          "and external URL handler.",
+          ""
+        ],
+        "desc" : "Start watching for tabs and routing them. Detects the browser, discovers profiles",
+        "def" : "ProfileRouter:start()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:start()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "start",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.\n\nParameters:\n * None\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.",
+          ""
+        ],
+        "desc" : "Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.",
+        "def" : "ProfileRouter:stop()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:stop()",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "stop",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Bind hotkeys for ProfileRouter actions.\n\nParameters:\n * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.\n   Example: `{cycleTab = {{\"ctrl\"}, \"s\"}}`\n\nReturns:\n * The ProfileRouter object",
+        "stripped_doc" : [
+          "Bind hotkeys for ProfileRouter actions.",
+          ""
+        ],
+        "desc" : "Bind hotkeys for ProfileRouter actions.",
+        "def" : "ProfileRouter:bindHotkeys(mapping)",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:bindHotkeys(mapping)",
+        "type" : "Method",
+        "returns" : [
+          " * The ProfileRouter object"
+        ],
+        "name" : "bindHotkeys",
+        "parameters" : [
+          " * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.",
+          "   Example: `{cycleTab = {{\"ctrl\"}, \"s\"}}`",
+          ""
+        ]
+      },
+      {
+        "doc" : "Move the current tab to the next profile. With 2 profiles this toggles;\nwith 3+ it advances to the next and wraps around. Marks the URL on cooldown\nso the auto-router won't move it back. Shows a notification with an Undo button.\n\nParameters:\n * None\n\nReturns:\n * None",
+        "stripped_doc" : [
+          "Move the current tab to the next profile. With 2 profiles this toggles;",
+          "with 3+ it advances to the next and wraps around. Marks the URL on cooldown",
+          "so the auto-router won't move it back. Shows a notification with an Undo button.",
+          ""
+        ],
+        "desc" : "Move the current tab to the next profile. With 2 profiles this toggles;",
+        "def" : "ProfileRouter:cycleTab()",
+        "notes" : [
+
+        ],
+        "signature" : "ProfileRouter:cycleTab()",
+        "type" : "Method",
+        "returns" : [
+          " * None"
+        ],
+        "name" : "cycleTab",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      }
+    ],
+    "Command" : [
+
+    ],
+    "doc" : "Route browser tabs between profiles automatically.\nSupports Dia and Google Chrome with any number of profiles.\n[Homepage](https:\/\/github.com\/malpern\/ProfileRouter)",
+    "Field" : [
+
+    ],
+    "name" : "ProfileRouter"
+  }
+]

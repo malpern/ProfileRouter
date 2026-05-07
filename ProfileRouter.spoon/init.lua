@@ -23,28 +23,33 @@ local urlhandlerMod = dofile(spoonPath .. "urlhandler.lua")
 
 --- ProfileRouter.browser
 --- Variable
---- Browser config table: {name, bundleID, processName}. Auto-detected if nil.
+--- Browser config table with keys: name (string), bundleID (string), processName (string).
+--- Auto-detected from running applications if nil. Checks Dia first, then Google Chrome.
 obj.browser = nil
 
 --- ProfileRouter.profiles
 --- Variable
---- List of profile tables. Auto-discovered from route files if nil.
---- Each entry: {name, titlePattern, routeFile, icon, isDefault}
+--- List of profile tables, each with keys: name (string), titlePattern (string or nil),
+--- routeFile (string), icon (string), isDefault (boolean).
+--- Auto-discovered from route files in `routesDir` if nil. Profile names are derived from
+--- filenames (e.g., `work.txt` becomes "Work"). The default profile is detected automatically
+--- by scanning browser window titles at start time.
 obj.profiles = nil
 
 --- ProfileRouter.routesDir
 --- Variable
---- Directory containing route text files.
+--- Directory containing route text files. Each `.txt` file defines a profile.
+--- Default: `~/.hammerspoon/routes/`
 obj.routesDir = os.getenv("HOME") .. "/.hammerspoon/routes/"
 
 --- ProfileRouter.cooldownSeconds
 --- Variable
---- Seconds before a manually-moved URL can be auto-routed again.
+--- Seconds before a manually-moved URL can be auto-routed again. Default: 600 (10 minutes).
 obj.cooldownSeconds = 600
 
 --- ProfileRouter.debug
 --- Variable
---- Enable logging to ~/.hammerspoon/profile-router.log
+--- When true, log activity to `~/.hammerspoon/profile-router.log`. Default: true.
 obj.debug = true
 
 obj._browser = nil
@@ -66,14 +71,28 @@ end
 
 --- ProfileRouter:init()
 --- Method
---- Initialize the Spoon (called by hs.loadSpoon).
+--- Initialize the Spoon. Called automatically by `hs.loadSpoon`.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * The ProfileRouter object
 function obj:init()
     return self
 end
 
 --- ProfileRouter:start()
 --- Method
---- Start watching for tabs and routing them.
+--- Start watching for tabs and routing them. Detects the browser, discovers profiles
+--- from route files, starts the window title watcher, route file watcher, cooldown timer,
+--- and external URL handler.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * The ProfileRouter object
 function obj:start()
     self._browser = self.browser or browserMod.detect()
     if not self._browser then
@@ -93,6 +112,7 @@ function obj:start()
         return self
     end
 
+    profilesMod.detectDefaultFromWindows(self._profiles, self._browser.bundleID)
     profilesMod.loadAllRules(self._profiles, self.routesDir)
     local profileNames = {}
     for _, p in ipairs(self._profiles) do
@@ -150,7 +170,13 @@ end
 
 --- ProfileRouter:stop()
 --- Method
---- Stop all watchers, timers, and hotkeys.
+--- Stop all watchers, timers, and hotkeys. Unregisters the external URL handler.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * The ProfileRouter object
 function obj:stop()
     for k, w in pairs(self._watchers) do
         if type(w.stop) == "function" then w:stop()
@@ -173,10 +199,14 @@ end
 
 --- ProfileRouter:bindHotkeys(mapping)
 --- Method
---- Bind hotkeys. Supported actions: cycleTab
+--- Bind hotkeys for ProfileRouter actions.
 ---
 --- Parameters:
----  * mapping - {cycleTab = {mods, key}}
+---  * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.
+---    Example: `{cycleTab = {{"ctrl"}, "s"}}`
+---
+--- Returns:
+---  * The ProfileRouter object
 function obj:bindHotkeys(mapping)
     if mapping.cycleTab then
         local mods, key = mapping.cycleTab[1], mapping.cycleTab[2]
@@ -189,7 +219,15 @@ end
 
 --- ProfileRouter:cycleTab()
 --- Method
---- Move the current tab to the next profile.
+--- Move the current tab to the next profile. With 2 profiles this toggles;
+--- with 3+ it advances to the next and wraps around. Marks the URL on cooldown
+--- so the auto-router won't move it back. Shows a notification with an Undo button.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * None
 function obj:cycleTab()
     flog("=== Cycle triggered ===")
     local b = self._browser

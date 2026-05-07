@@ -27,6 +27,7 @@ function profiles.discover(routesDir)
     end
     if not hasDefault then
         list[#list].isDefault = true
+        list[#list].titlePattern = nil
     end
     return list
 end
@@ -50,10 +51,51 @@ function profiles.resolve(userProfiles, routesDir)
         end
         if not hasDefault and #list > 0 then
             list[#list].isDefault = true
+            list[#list].titlePattern = nil
         end
         return list
     end
     return profiles.discover(routesDir)
+end
+
+function profiles.detectDefaultFromWindows(profileList, bundleID)
+    local app = hs.application.find(bundleID)
+    if not app then return end
+
+    local titles = {}
+    for _, w in ipairs(app:allWindows()) do
+        titles[#titles + 1] = w:title() or ""
+    end
+    if #titles == 0 then return end
+
+    for _, p in ipairs(profileList) do
+        local found = false
+        for _, title in ipairs(titles) do
+            if title:find(p.name .. ":", 1, true) then
+                found = true
+                break
+            end
+        end
+        if found then
+            p.titlePattern = p.name .. ":"
+            p.isDefault = false
+        else
+            p.titlePattern = nil
+            p.isDefault = true
+        end
+    end
+
+    local defaultCount = 0
+    for _, p in ipairs(profileList) do
+        if p.isDefault then defaultCount = defaultCount + 1 end
+    end
+    if defaultCount ~= 1 then
+        for _, p in ipairs(profileList) do
+            p.isDefault = false
+        end
+        profileList[#profileList].isDefault = true
+        profileList[#profileList].titlePattern = nil
+    end
 end
 
 function profiles.loadRules(routesDir, filename)

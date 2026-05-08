@@ -102,8 +102,8 @@ function profiles.loadRules(routesDir, filename)
     local rules = { domains = {}, paths = {} }
     local f = io.open(routesDir .. filename, "r")
     if not f then return rules end
-    for line in f:lines() do
-        line = line:match("^%s*(.-)%s*$")
+    for raw in f:lines() do
+        local line = raw:match("^%s*(.-)%s*$")
         if line ~= "" and line:sub(1, 1) ~= "#" then
             if line:sub(1, 5) == "path:" then
                 rules.paths[#rules.paths + 1] = line:sub(6):lower()

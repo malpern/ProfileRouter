@@ -4,6 +4,8 @@ hs.spoons = { scriptPath = function() return "" end }
 
 hs.application = {
     find = function() return nil end,
+    get = function() return nil end,
+    frontmostApplication = function() return nil end,
     watcher = {
         new = function() return { start = function() end, stop = function() end } end,
         launched = 1,

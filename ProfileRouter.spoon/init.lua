@@ -202,8 +202,9 @@ end
 --- Bind hotkeys for ProfileRouter actions.
 ---
 --- Parameters:
----  * mapping - A table with the key `cycleTab` mapped to a hotkey spec: `{modifiers, key}`.
----    Example: `{cycleTab = {{"ctrl"}, "s"}}`
+---  * mapping - A table with action names mapped to hotkey specs: `{modifiers, key}`.
+---    Supported actions: `cycleTab`, `cycleProfile`.
+---    Example: `{cycleTab = {{"ctrl"}, "s"}, cycleProfile = {{"ctrl"}, "a"}}`
 ---
 --- Returns:
 ---  * The ProfileRouter object
@@ -212,6 +213,12 @@ function obj:bindHotkeys(mapping)
         local mods, key = mapping.cycleTab[1], mapping.cycleTab[2]
         self._hotkeys.cycleTab = hs.hotkey.bind(mods, key, function()
             self:cycleTab()
+        end)
+    end
+    if mapping.cycleProfile then
+        local mods, key = mapping.cycleProfile[1], mapping.cycleProfile[2]
+        self._hotkeys.cycleProfile = hs.hotkey.bind(mods, key, function()
+            self:cycleProfile()
         end)
     end
     return self
@@ -277,6 +284,55 @@ function obj:cycleTab()
     end
 
     flog("=== Cycle done ===")
+end
+
+--- ProfileRouter:cycleProfile()
+--- Method
+--- Bring the next profile's browser window to the front without moving any tabs.
+--- With 2 profiles this toggles; with 3+ it advances and wraps.
+---
+--- Parameters:
+---  * None
+---
+--- Returns:
+---  * None
+function obj:cycleProfile()
+    flog("=== CycleProfile triggered ===")
+    local b = self._browser
+    if not b then return end
+
+    local app = hs.application.get(b.bundleID)
+    if not app then
+        flog("WARN: Browser not running")
+        return
+    end
+
+    local frontWin = hs.window.focusedWindow()
+    local currentProfile
+    if frontWin and app:bundleID() == (hs.application.frontmostApplication():bundleID()) then
+        currentProfile = profilesMod.detectCurrent(frontWin:title(), self._profiles)
+    end
+    if not currentProfile then
+        currentProfile = self._profiles[#self._profiles]
+    end
+
+    local targetProfile = profilesMod.findNext(currentProfile.name, self._profiles)
+    flog("CycleProfile: " .. currentProfile.name .. " -> " .. targetProfile.name)
+
+    local targetWin = moverMod.findProfileWindow(app, targetProfile, self._profiles)
+    if not targetWin then
+        flog("WARN: Could not find " .. targetProfile.name .. " window")
+        hs.notify.new(nil, {
+            title = "Profile Switch Failed",
+            informativeText = "Could not find " .. targetProfile.name .. " window",
+            withdrawAfter = 3,
+        }):send()
+        return
+    end
+
+    targetWin:focus()
+    app:activate()
+    flog("=== CycleProfile done ===")
 end
 
 return obj

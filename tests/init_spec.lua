@@ -180,6 +180,20 @@ describe("ProfileRouter init", function()
             assert.is_not_nil(obj._hotkeys.cycleTab)
         end)
 
+        it("registers cycleProfile hotkey", function()
+            obj:bindHotkeys({ cycleProfile = {{"ctrl"}, "a"} })
+            assert.is_not_nil(obj._hotkeys.cycleProfile)
+        end)
+
+        it("registers both hotkeys at once", function()
+            obj:bindHotkeys({
+                cycleTab = {{"ctrl"}, "s"},
+                cycleProfile = {{"ctrl"}, "a"},
+            })
+            assert.is_not_nil(obj._hotkeys.cycleTab)
+            assert.is_not_nil(obj._hotkeys.cycleProfile)
+        end)
+
         it("returns self", function()
             local result = obj:bindHotkeys({ cycleTab = {{"ctrl"}, "s"} })
             assert.equals(obj, result)
@@ -208,6 +222,86 @@ describe("ProfileRouter init", function()
             assert.has_no.errors(function()
                 obj:cycleTab()
             end)
+        end)
+    end)
+
+    describe("cycleProfile", function()
+        it("does nothing when browser not set", function()
+            obj._browser = nil
+            assert.has_no.errors(function()
+                obj:cycleProfile()
+            end)
+        end)
+
+        it("does nothing when browser not running", function()
+            obj._browser = { bundleID = "com.test", name = "Test" }
+            hs.application.get = function() return nil end
+            assert.has_no.errors(function()
+                obj:cycleProfile()
+            end)
+        end)
+
+        it("focuses the next profile window", function()
+            local focused = false
+            local activated = false
+            local personalWin = {
+                title = function() return "My personal page" end,
+                id = function() return 2 end,
+                focus = function() focused = true end,
+            }
+            local mockApp = {
+                bundleID = function() return "com.test" end,
+                activate = function() activated = true end,
+                allWindows = function()
+                    return {
+                        { title = function() return "Work: some page" end, id = function() return 1 end },
+                        personalWin,
+                    }
+                end,
+            }
+            obj._browser = { bundleID = "com.test", name = "Test" }
+            obj._profiles = {
+                { name = "Work", titlePattern = "Work:", isDefault = false, rules = { domains = {}, paths = {} } },
+                { name = "Personal", titlePattern = nil, isDefault = true, rules = { domains = {}, paths = {} } },
+            }
+            obj.debug = false
+            hs.application.get = function() return mockApp end
+            hs.application.frontmostApplication = function() return mockApp end
+            hs.window.focusedWindow = function()
+                return { title = function() return "Work: some page" end }
+            end
+
+            obj:cycleProfile()
+            assert.is_true(focused)
+            assert.is_true(activated)
+        end)
+
+        it("shows notification when target window not found", function()
+            local notified = false
+            hs.notify.new = function(_, opts)
+                if opts and opts.title and opts.title:find("Profile Switch Failed") then
+                    notified = true
+                end
+                return { send = function() end }
+            end
+            local mockApp = {
+                bundleID = function() return "com.test" end,
+                allWindows = function() return {} end,
+            }
+            obj._browser = { bundleID = "com.test", name = "Test" }
+            obj._profiles = {
+                { name = "Work", titlePattern = "Work:", isDefault = false, rules = { domains = {}, paths = {} } },
+                { name = "Personal", titlePattern = nil, isDefault = true, rules = { domains = {}, paths = {} } },
+            }
+            obj.debug = false
+            hs.application.get = function() return mockApp end
+            hs.application.frontmostApplication = function() return mockApp end
+            hs.window.focusedWindow = function()
+                return { title = function() return "Work: some page" end }
+            end
+
+            obj:cycleProfile()
+            assert.is_true(notified)
         end)
     end)
 end)

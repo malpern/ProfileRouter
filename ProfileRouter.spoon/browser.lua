@@ -5,12 +5,19 @@ browser.KNOWN = {
         name = "Dia",
         bundleID = "company.thebrowser.dia",
         processName = "Dia",
+        -- jsCapable=false: Dia 1.36.0's AppleScript-JS bridge CRASHES the browser
+        -- (stack-overflow / EXC_BAD_ACCESS) when --enable-applescript-javascript is
+        -- set and `execute javascript` is called. We never invoke the JS bridge on
+        -- Dia, so YouTube playback-position preservation is unavailable here.
+        -- Flip to true to re-test once The Browser Company fixes the crash.
+        jsCapable = false,
         jsWarning = "Launch Dia with --enable-applescript-javascript for YouTube features",
     },
     {
         name = "Google Chrome",
         bundleID = "com.google.Chrome",
         processName = "Google Chrome",
+        jsCapable = true,
         jsWarning = "Enable 'Allow JavaScript from Apple Events' in Chrome > View > Developer",
     },
 }
@@ -54,6 +61,8 @@ function browser.openTab(b, windowIndex, url)
 end
 
 function browser.executeJS(b, windowIndex, js)
+    -- Never drive the JS bridge on a browser whose engine crashes on it (see Dia).
+    if b.jsCapable == false then return nil end
     local ok, result = hs.osascript.applescript(string.format(
         'tell application "%s" to tell active tab of window %d to execute javascript "%s"',
         b.name, windowIndex or 1, escape(js)
@@ -63,6 +72,9 @@ function browser.executeJS(b, windowIndex, js)
 end
 
 function browser.checkJSSupport(b)
+    -- Browsers flagged jsCapable=false have no working/safe JS bridge; report
+    -- "supported" so the launch watcher stays quiet (the feature is just off).
+    if b.jsCapable == false then return true end
     local ok, _ = hs.osascript.applescript(string.format(
         'tell application "%s" to tell active tab of window 1 to execute javascript "true"',
         b.name
